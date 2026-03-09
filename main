@@ -1,0 +1,321 @@
+// تعريف المتغيرات العامة
+let map;
+let markers = [];
+let allSites = [];
+
+// الفئات والألوان والأيقونات
+const categoryIcons = {
+    tourism: 'fa-landmark',
+    hotel: 'fa-hotel',
+    apartment: 'fa-building',
+    cafe: 'fa-mug-hot',
+    restaurant: 'fa-utensils',
+    historic: 'fa-archway'
+};
+
+const categoryColors = {
+    tourism: '#c44536',
+    hotel: '#3c887e',
+    apartment: '#b83b5e',
+    cafe: '#d4a373',
+    restaurant: '#e9c46a',
+    historic: '#2a9d8f'
+};
+
+const subCategoryColors = {
+    '5stars': '#d4af37',
+    '4stars': '#b0b0b0',
+    '3stars': '#cd7f32',
+    '2stars': '#6c757d',
+    '1star': '#8b4513',
+    'unclassified': '#1a4a7a'
+};
+
+// حالة الفلاتر
+let mainFilter = 'all';
+let subFilter = 'all';
+let searchTerm = '';
+
+// تحميل البيانات
+async function loadData() {
+    try {
+        const [hotels, cafes, restaurants, historic] = await Promise.all([
+            fetch('data/hotels.json').then(res => res.json()),
+            fetch('data/cafes.json').then(res => res.json()),
+            fetch('data/restaurants.json').then(res => res.json()),
+            fetch('data/historic.json').then(res => res.json())
+        ]);
+        allSites = [...hotels, ...cafes, ...restaurants, ...historic];
+        initMap();
+        renderStats();
+        initFilters();
+        filterSites();
+    } catch (error) {
+        console.error('خطأ في تحميل البيانات:', error);
+    }
+}
+
+// تهيئة الخريطة
+function initMap() {
+    map = L.map('map', { zoomControl: true }).setView([32.8872, 13.1913], 12);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
+
+    allSites.forEach(site => {
+        if (!site.lat || !site.lng) return;
+        const icon = createCustomIcon(site);
+        const marker = L.marker([site.lat, site.lng], { icon }).addTo(map);
+        marker.siteData = site;
+
+        let details = '';
+        if (site.rooms || site.beds) {
+            details += `<p><i class="fas fa-bed"></i> الغرف: ${site.rooms || '?'} | الأسرة: ${site.beds || '?'}</p>`;
+        }
+        if (site.phone) {
+            details += `<p><i class="fas fa-phone"></i> ${site.phone}</p>`;
+        }
+
+        const popupContent = `
+            <div class="popup-header">
+                <i class="fas ${categoryIcons[site.category]}" style="margin-left: 8px;"></i>
+                ${site.name}
+            </div>
+            <div class="popup-body">
+                <p><i class="fas fa-tag"></i> ${site.type || 'غير مصنف'}</p>
+                <p><i class="fas fa-info-circle"></i> ${site.description || ''}</p>
+                ${details}
+            </div>
+        `;
+
+        marker.bindPopup(popupContent, { className: 'custom-popup', minWidth: 240 });
+        markers.push(marker);
+    });
+
+    map.zoomControl.setPosition('bottomleft');
+    L.control.scale({ imperial: false, metric: true, position: 'bottomleft' }).addTo(map);
+    map.on('click', () => map.closePopup());
+}
+
+// إنشاء أيقونة مخصصة
+function createCustomIcon(site) {
+    let bgColor = categoryColors[site.category] || '#1a4a7a';
+    if (site.category === 'hotel' && subCategoryColors[site.subCategory]) {
+        bgColor = subCategoryColors[site.subCategory];
+    }
+    return L.divIcon({
+        html: `<div style="background-color: ${bgColor}; width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 3px solid white; box-shadow: 0 3px 10px rgba(0,0,0,0.3);"><i class="fas ${categoryIcons[site.category] || 'fa-map-pin'}" style="color: white; font-size: 18px;"></i></div>`,
+        className: 'custom-marker',
+        iconSize: [38, 38],
+        iconAnchor: [19, 38],
+        popupAnchor: [0, -38]
+    });
+}
+
+// عرض الإحصائيات
+function renderStats() {
+    const totalHotels = allSites.filter(s => s.category === 'hotel').length;
+    const totalApartments = allSites.filter(s => s.category === 'apartment').length;
+    const totalCafes = allSites.filter(s => s.category === 'cafe').length;
+    const totalRestaurants = allSites.filter(s => s.category === 'restaurant').length;
+    const totalTourism = allSites.filter(s => s.category === 'tourism').length;
+    const totalHistoric = allSites.filter(s => s.category === 'historic').length;
+    const totalRooms = allSites.reduce((acc, s) => acc + (s.rooms || 0), 0);
+    const totalBeds = allSites.reduce((acc, s) => acc + (s.beds || 0), 0);
+
+    const stats = {
+        'الفنادق': totalHotels,
+        'شقق فندقية': totalApartments,
+        'مقاهي': totalCafes,
+        'مطاعم': totalRestaurants,
+        'معالم سياحية': totalTourism,
+        'مواقع أثرية': totalHistoric,
+        'إجمالي الغرف': totalRooms,
+        'إجمالي الأسرة': totalBeds
+    };
+
+    const container = document.getElementById('statsContainer');
+    let html = '';
+    for (const [label, value] of Object.entries(stats)) {
+        let icon = 'fa-chart-bar';
+        if (label.includes('فنادق')) icon = 'fa-hotel';
+        else if (label.includes('شقق')) icon = 'fa-building';
+        else if (label.includes('مقاهي')) icon = 'fa-mug-hot';
+        else if (label.includes('مطاعم')) icon = 'fa-utensils';
+        else if (label.includes('معالم')) icon = 'fa-landmark';
+        else if (label.includes('آثار')) icon = 'fa-archway';
+        else if (label.includes('غرف')) icon = 'fa-door-open';
+        else if (label.includes('أسرة')) icon = 'fa-bed';
+        html += `
+            <div class="stat-card">
+                <i class="fas ${icon}"></i>
+                <div class="stat-value">${value}</div>
+                <div class="stat-label">${label}</div>
+            </div>
+        `;
+    }
+    container.innerHTML = html;
+}
+
+// تهيئة أزرار الفلتر الرئيسي
+function initFilters() {
+    document.querySelectorAll('.main-filter-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            mainFilter = this.dataset.main;
+            document.querySelectorAll('.main-filter-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            subFilter = 'all';
+            updateSubFilter(mainFilter);
+            filterSites();
+        });
+    });
+
+    document.getElementById('search-input').addEventListener('input', function(e) {
+        searchTerm = e.target.value;
+        filterSites();
+    });
+
+    // تحكم الشريط الجانبي
+    const sidebar = document.getElementById('sidebar');
+    const toggleBtn = document.getElementById('toggleSidebar');
+    const closeBtn = document.getElementById('closeSidebar');
+
+    toggleBtn?.addEventListener('click', () => {
+        sidebar.classList.toggle('closed');
+        const icon = toggleBtn.querySelector('i');
+        icon.className = sidebar.classList.contains('closed') ? 'fas fa-chevron-left' : 'fas fa-chevron-right';
+    });
+
+    closeBtn?.addEventListener('click', () => {
+        sidebar.classList.add('closed');
+        if (toggleBtn) toggleBtn.querySelector('i').className = 'fas fa-chevron-left';
+    });
+
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 768) sidebar.classList.remove('closed');
+    });
+}
+
+// تحديث الفلتر الفرعي حسب الفئة الرئيسية
+function updateSubFilter(mainCategory) {
+    const subFilterSection = document.getElementById('subFilterSection');
+    const subFilterTitle = document.getElementById('subFilterTitle');
+    const subFilterButtons = document.getElementById('subFilterButtons');
+    if (!subFilterSection || !subFilterTitle || !subFilterButtons) return;
+
+    let subCategories = [];
+    let categoryNames = {};
+
+    if (mainCategory === 'hotel' || mainCategory === 'apartment') {
+        subCategories = ['all', '5stars', '4stars', '3stars', '2stars', '1star', 'unclassified'];
+        categoryNames = { all: 'الكل', '5stars': '5 نجوم', '4stars': '4 نجوم', '3stars': '3 نجوم', '2stars': '2 نجمتان', '1star': 'نجمة واحدة', unclassified: 'غير مصنف' };
+        subFilterTitle.innerText = 'تصنيف الفنادق';
+    } else if (mainCategory === 'cafe' || mainCategory === 'restaurant') {
+        subCategories = ['all', 'cafe', 'fastfood', 'arabic', 'turkish', 'lebanese', 'italian', 'seafood', 'burger', 'pizza', 'grill', 'indian', 'libyan', 'sweets'];
+        categoryNames = { all: 'الكل', cafe: 'مقهى', fastfood: 'وجبات سريعة', arabic: 'عربي', turkish: 'تركي', lebanese: 'لبناني', italian: 'إيطالي', seafood: 'مأكولات بحرية', burger: 'برجر', pizza: 'بيتزا', grill: 'مشاوي', indian: 'هندي', libyan: 'ليبي', sweets: 'حلويات' };
+        subFilterTitle.innerText = 'نوع المطعم/المقهى';
+    } else if (mainCategory === 'tourism' || mainCategory === 'historic') {
+        subCategories = ['all', 'mosque', 'museum', 'market', 'landmark', 'gate', 'church', 'tower', 'castle', 'bath', 'school', 'consulate', 'house', 'wall', 'arch'];
+        categoryNames = { all: 'الكل', mosque: 'مسجد', museum: 'متحف', market: 'سوق', landmark: 'معلم', gate: 'باب', church: 'كنيسة', tower: 'برج', castle: 'قلعة', bath: 'حمام', school: 'مدرسة', consulate: 'قنصلية', house: 'حوش', wall: 'سور', arch: 'قوس' };
+        subFilterTitle.innerText = 'نوع المعلم';
+    } else {
+        subFilterSection.style.display = 'none';
+        return;
+    }
+
+    subFilterSection.style.display = 'block';
+    let html = '';
+    subCategories.forEach(cat => {
+        html += `<button class="filter-btn ${subFilter === cat ? 'active' : ''}" data-sub="${cat}"><i class="fas ${cat === 'all' ? 'fa-globe' : 'fa-tag'}"></i> ${categoryNames[cat] || cat}</button>`;
+    });
+    subFilterButtons.innerHTML = html;
+
+    document.querySelectorAll('#subFilterButtons .filter-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            subFilter = this.dataset.sub;
+            document.querySelectorAll('#subFilterButtons .filter-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            filterSites();
+        });
+    });
+}
+
+// تصفية المواقع وإعادة رسم القائمة
+function filterSites() {
+    const filtered = allSites.filter(site => {
+        if (mainFilter !== 'all' && site.category !== mainFilter) return false;
+        if (subFilter !== 'all') {
+            if (mainFilter === 'hotel' || mainFilter === 'apartment') {
+                if (site.subCategory !== subFilter) return false;
+            } else if (mainFilter === 'cafe' || mainFilter === 'restaurant') {
+                if (site.subCategory !== subFilter) return false;
+            } else if (mainFilter === 'tourism' || mainFilter === 'historic') {
+                if (site.subCategory !== subFilter) return false;
+            }
+        }
+        if (searchTerm) {
+            const term = searchTerm.trim().toLowerCase();
+            return site.name.toLowerCase().includes(term) || 
+                   (site.type && site.type.toLowerCase().includes(term)) ||
+                   (site.description && site.description.toLowerCase().includes(term));
+        }
+        return true;
+    });
+
+    // إخفاء/إظهار الماركرز
+    markers.forEach(marker => {
+        const site = marker.siteData;
+        const shouldShow = filtered.includes(site);
+        if (shouldShow) {
+            if (!map.hasLayer(marker)) marker.addTo(map);
+        } else {
+            if (map.hasLayer(marker)) map.removeLayer(marker);
+        }
+    });
+
+    renderSitesList(filtered);
+}
+
+// عرض قائمة المواقع المفلترة
+function renderSitesList(sites) {
+    const container = document.getElementById('sitesList');
+    if (!container) return;
+    if (sites.length === 0) {
+        container.innerHTML = '<div style="text-align: center; padding: 30px; color: #888;"><i class="fas fa-search" style="font-size: 2rem; margin-bottom: 10px;"></i><br>لا توجد نتائج</div>';
+        return;
+    }
+
+    let html = '';
+    sites.forEach(site => {
+        let iconColor = categoryColors[site.category] || '#1a4a7a';
+        if (site.category === 'hotel' && subCategoryColors[site.subCategory]) {
+            iconColor = subCategoryColors[site.subCategory];
+        }
+        html += `
+            <div class="site-item" data-lat="${site.lat}" data-lng="${site.lng}" data-name="${site.name}">
+                <div class="site-icon" style="background: ${iconColor};">
+                    <i class="fas ${categoryIcons[site.category] || 'fa-map-pin'}"></i>
+                </div>
+                <div class="site-info">
+                    <div class="site-name">${site.name}</div>
+                    <div class="site-type"><i class="fas ${categoryIcons[site.category]}"></i> ${site.type || site.description?.substring(0, 30) || ''}</div>
+                </div>
+            </div>
+        `;
+    });
+
+    container.innerHTML = html;
+
+    document.querySelectorAll('.site-item').forEach(item => {
+        item.addEventListener('click', function() {
+            const lat = parseFloat(this.dataset.lat);
+            const lng = parseFloat(this.dataset.lng);
+            const name = this.dataset.name;
+            map.setView([lat, lng], 16);
+            const marker = markers.find(m => m.siteData.name === name);
+            if (marker) marker.openPopup();
+            if (window.innerWidth <= 768) document.getElementById('sidebar').classList.add('closed');
+        });
+    });
+}
+
+// بدء التطبيق
+loadData();
