@@ -36,37 +36,97 @@ let mainFilter = 'all';
 let subFilter = 'all';
 let searchTerm = '';
 
-// تحميل البيانات
+// تحميل البيانات مع معالجة الأخطاء
 async function loadData() {
     try {
-        const [hotels, cafes, restaurants, historic] = await Promise.all([
-            fetch('data/hotels.json').then(res => res.json()),
-            fetch('data/cafes.json').then(res => res.json()),
-            fetch('data/restaurants.json').then(res => res.json()),
-            fetch('data/historic.json').then(res => res.json())
+        const baseUrl = 'data/';
+        
+        // استخدام Promise.allSettled لتجنب فشل ملف واحد
+        const results = await Promise.allSettled([
+            fetch(baseUrl + 'hotels.json'),
+            fetch(baseUrl + 'cafes.json'),
+            fetch(baseUrl + 'restaurants.json'),
+            fetch(baseUrl + 'historic.json')
         ]);
-        allSites = [...hotels, ...cafes, ...restaurants, ...historic];
+
+        const fileNames = ['hotels.json', 'cafes.json', 'restaurants.json', 'historic.json'];
+        const allData = [];
+        const errors = [];
+
+        for (let i = 0; i < results.length; i++) {
+            const result = results[i];
+            if (result.status === 'fulfilled' && result.value.ok) {
+                try {
+                    const data = await result.value.json();
+                    allData.push(...data);
+                    console.log(`✅ تم تحميل ${fileNames[i]} بنجاح`);
+                } catch (e) {
+                    errors.push(`❌ ${fileNames[i]} (خطأ في تحويل JSON)`);
+                }
+            } else {
+                const status = result.status === 'fulfilled' ? result.value.status : 'failed';
+                errors.push(`❌ ${fileNames[i]} (${status})`);
+            }
+        }
+
+        allSites = allData;
+        console.log(`تم تحميل ${allSites.length} موقع بنجاح`);
+
+        // عرض الأخطاء إن وجدت
+        if (errors.length > 0) {
+            const errorDiv = document.createElement('div');
+            errorDiv.style.cssText = 'background: #ffebee; color: #c62828; padding: 10px; margin: 10px; border-radius: 8px; font-size: 0.9rem;';
+            errorDiv.innerHTML = `<strong>⚠️ مشكلة في تحميل بعض الملفات:</strong><br>${errors.join('<br>')}`;
+            document.querySelector('.sidebar').prepend(errorDiv);
+        }
+
+        if (allSites.length === 0) {
+            throw new Error('لم يتم تحميل أي بيانات');
+        }
+
+        // بدء التطبيق
         initMap();
         renderStats();
         initFilters();
         filterSites();
     } catch (error) {
         console.error('خطأ في تحميل البيانات:', error);
+        document.getElementById('sitesList').innerHTML = `
+            <div style="text-align: center; padding: 30px; color: #d32f2f;">
+                <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 10px;"></i><br>
+                <strong>حدث خطأ في تحميل البيانات</strong><br>
+                <span style="color: #666; font-size: 0.9rem;">${error.message}</span><br><br>
+                <span style="color: #999; font-size: 0.8rem;">تأكد من وجود ملفات JSON في مجلد data/ وأن المسارات صحيحة.</span>
+            </div>
+        `;
     }
 }
 
 // تهيئة الخريطة
 function initMap() {
     map = L.map('map', { zoomControl: true }).setView([32.8872, 13.1913], 12);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { 
+        maxZoom: 19,
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
 
+    // إضافة الماركرز
     allSites.forEach(site => {
         if (!site.lat || !site.lng) return;
         const icon = createCustomIcon(site);
         const marker = L.marker([site.lat, site.lng], { icon }).addTo(map);
         marker.siteData = site;
 
+        // بناء محتوى البوب أب
         let details = '';
+
+        // إضافة الصورة إذا وجدت
+        if (site.photo) {
+            details += `<div style="text-align: center; margin-bottom: 10px;">
+                <img src="${site.photo}" style="max-width: 100%; height: auto; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="${site.name}" onerror="this.style.display='none'" />
+            </div>`;
+        }
+
         if (site.rooms || site.beds) {
             details += `<p><i class="fas fa-bed"></i> الغرف: ${site.rooms || '?'} | الأسرة: ${site.beds || '?'}</p>`;
         }
@@ -80,9 +140,9 @@ function initMap() {
                 ${site.name}
             </div>
             <div class="popup-body">
+                ${details}
                 <p><i class="fas fa-tag"></i> ${site.type || 'غير مصنف'}</p>
                 <p><i class="fas fa-info-circle"></i> ${site.description || ''}</p>
-                ${details}
             </div>
         `;
 
@@ -178,16 +238,20 @@ function initFilters() {
     const toggleBtn = document.getElementById('toggleSidebar');
     const closeBtn = document.getElementById('closeSidebar');
 
-    toggleBtn?.addEventListener('click', () => {
-        sidebar.classList.toggle('closed');
-        const icon = toggleBtn.querySelector('i');
-        icon.className = sidebar.classList.contains('closed') ? 'fas fa-chevron-left' : 'fas fa-chevron-right';
-    });
+    if (toggleBtn) {
+        toggleBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('closed');
+            const icon = toggleBtn.querySelector('i');
+            icon.className = sidebar.classList.contains('closed') ? 'fas fa-chevron-left' : 'fas fa-chevron-right';
+        });
+    }
 
-    closeBtn?.addEventListener('click', () => {
-        sidebar.classList.add('closed');
-        if (toggleBtn) toggleBtn.querySelector('i').className = 'fas fa-chevron-left';
-    });
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            sidebar.classList.add('closed');
+            if (toggleBtn) toggleBtn.querySelector('i').className = 'fas fa-chevron-left';
+        });
+    }
 
     window.addEventListener('resize', () => {
         if (window.innerWidth > 768) sidebar.classList.remove('closed');
