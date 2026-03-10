@@ -39,29 +39,50 @@ let searchTerm = '';
 // تحميل البيانات مع معالجة الأخطاء
 async function loadData() {
     try {
-        // استخدام مسارات نسبية بسيطة (ملفات JSON في مجلد data)
-        const [hotels, cafes, restaurants, historic] = await Promise.all([
-            fetch('data/hotels.json').then(res => {
-                if (!res.ok) throw new Error(`HTTP error ${res.status} - hotels.json`);
-                return res.json();
-            }),
-            fetch('data/cafes.json').then(res => {
-                if (!res.ok) throw new Error(`HTTP error ${res.status} - cafes.json`);
-                return res.json();
-            }),
-            fetch('data/restaurants.json').then(res => {
-                if (!res.ok) throw new Error(`HTTP error ${res.status} - restaurants.json`);
-                return res.json();
-            }),
-            fetch('data/historic.json').then(res => {
-                if (!res.ok) throw new Error(`HTTP error ${res.status} - historic.json`);
-                return res.json();
-            })
+        const baseUrl = 'data/';
+        
+        // استخدام Promise.allSettled لتجنب فشل ملف واحد
+        const results = await Promise.allSettled([
+            fetch(baseUrl + 'hotels.json'),
+            fetch(baseUrl + 'cafes.json'),
+            fetch(baseUrl + 'restaurants.json'),
+            fetch(baseUrl + 'historic.json')
         ]);
 
-        // دمج جميع المواقع
-        allSites = [...hotels, ...cafes, ...restaurants, ...historic];
+        const fileNames = ['hotels.json', 'cafes.json', 'restaurants.json', 'historic.json'];
+        const allData = [];
+        const errors = [];
+
+        for (let i = 0; i < results.length; i++) {
+            const result = results[i];
+            if (result.status === 'fulfilled' && result.value.ok) {
+                try {
+                    const data = await result.value.json();
+                    allData.push(...data);
+                    console.log(`✅ تم تحميل ${fileNames[i]} بنجاح`);
+                } catch (e) {
+                    errors.push(`❌ ${fileNames[i]} (خطأ في تحويل JSON)`);
+                }
+            } else {
+                const status = result.status === 'fulfilled' ? result.value.status : 'failed';
+                errors.push(`❌ ${fileNames[i]} (${status})`);
+            }
+        }
+
+        allSites = allData;
         console.log(`تم تحميل ${allSites.length} موقع بنجاح`);
+
+        // عرض الأخطاء إن وجدت
+        if (errors.length > 0) {
+            const errorDiv = document.createElement('div');
+            errorDiv.style.cssText = 'background: #ffebee; color: #c62828; padding: 10px; margin: 10px; border-radius: 8px; font-size: 0.9rem;';
+            errorDiv.innerHTML = `<strong>⚠️ مشكلة في تحميل بعض الملفات:</strong><br>${errors.join('<br>')}`;
+            document.querySelector('.sidebar').prepend(errorDiv);
+        }
+
+        if (allSites.length === 0) {
+            throw new Error('لم يتم تحميل أي بيانات');
+        }
 
         // بدء التطبيق
         initMap();
@@ -70,12 +91,12 @@ async function loadData() {
         filterSites();
     } catch (error) {
         console.error('خطأ في تحميل البيانات:', error);
-        // عرض رسالة خطأ للمستخدم
         document.getElementById('sitesList').innerHTML = `
             <div style="text-align: center; padding: 30px; color: #d32f2f;">
                 <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 10px;"></i><br>
-                حدث خطأ في تحميل البيانات. يرجى التأكد من اتصال الإنترنت أو المحاولة لاحقاً.<br>
-                <small style="color: #666;">${error.message}</small>
+                <strong>حدث خطأ في تحميل البيانات</strong><br>
+                <span style="color: #666; font-size: 0.9rem;">${error.message}</span><br><br>
+                <span style="color: #999; font-size: 0.8rem;">تأكد من وجود ملفات JSON في مجلد data/ وأن المسارات صحيحة.</span>
             </div>
         `;
     }
