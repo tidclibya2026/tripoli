@@ -1,165 +1,70 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>اكتشف طرابلس | منصة الترويج السياحي والموروث الثقافي</title>
-<meta name="description" content="منصة سياحية ثقافية لمدينة طرابلس تعرض الشواهد التاريخية، الموروث الثقافي، المأكولات، الخدمات السياحية، والحياة اليومية في المدينة.">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>طرابلس السياحية | Tripoli Tourism</title>
+  <meta name="description" content="منصة ترويجية سياحية لمدينة طرابلس تجمع المعالم التاريخية، المسارات، الإيواء، المطاعم، المقاهي، الحرف، والخريطة التفاعلية." />
+  <meta name="theme-color" content="#102A43" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-<header class="topbar">
-  <nav class="nav">
-    <a class="brand" href="#home"><div class="brand-mark">طر</div><div><strong>اكتشف طرابلس</strong><span>سياحة | موروث | حياة يومية</span></div></a>
-    <div class="navlinks">
-      <a href="#oldcity">طرابلس القديمة</a>
-      <a href="#history">الشواهد التاريخية</a>
-      <a href="#crafts">الصناعات</a>
-      <a href="#food">المذاق</a>
-      <a href="#services">الخدمات</a>
-      <a href="#daily">الحياة اليومية</a>
-      <a class="cta" href="#mapbox">الخريطة</a>
-    </div>
-  </nav>
-</header>
-
-<main id="home" class="hero tourism-hero">
-  <div class="hero-inner">
-    <section>
-      <span class="eyebrow">طرابلس — تاريخ يُرى وحياة تُعاش</span>
-      <h1>مدينة الألف جولة… من الأزقة إلى المذاق ومن الحرفة إلى البحر</h1>
-      <p>منصة ترويج سياحي وثقافي تقدم طرابلس للزائر عبر أربعة أبواب واضحة: الشواهد التاريخية، الموروث الثقافي، الخدمات السياحية، والحياة اليومية في المدينة.</p>
-      <div class="hero-actions"><a href="#routes" class="btn primary">اختر جولتك</a><a href="#oldcity" class="btn secondary">اكتشف المدينة القديمة</a></div>
-    </section>
-    <aside class="hero-card story-card">
-      <h3>ماذا تقدم المنصة؟</h3>
-      <p>دليل بصري وسردي للزائر، يعرض المعالم والتجارب والخدمات بطريقة مختصرة، قابلة للتطوير إلى منصة وطنية متكاملة لترويج طرابلس.</p>
-      <div class="timeline-mini">
-        <div class="tm"><b>01</b><span>الشواهد التاريخية ومعالم الذاكرة</span></div>
-        <div class="tm"><b>02</b><span>الصناعات والأسواق والموروث الحي</span></div>
-        <div class="tm"><b>03</b><span>المذاق الليبي وتجربة الطعام</span></div>
-        <div class="tm"><b>04</b><span>خدمات الزائر والحياة اليومية</span></div>
-      </div>
-    </aside>
-  </div>
-</main>
-
-<section class="section intro-strip">
-  <div class="wrap intro-grid">
-    <div><b>هوية المنصة</b><span>ترويج طرابلس كوجهة ثقافية حية، لا كمشهد أثري جامد.</span></div>
-    <div><b>محتوى المنصة</b><span>مدينة قديمة، شواهد تاريخية، حرف، مطبخ، خدمات، مسارات، وخريطة.</span></div>
-    <div><b>تجربة الزائر</b><span>أين أذهب؟ ماذا أرى؟ ماذا أتذوق؟ ماذا أشتري؟ وكيف أعيش المدينة؟</span></div>
-  </div>
-</section>
-
-<section id="oldcity" class="section feature">
-  <div class="wrap split">
-    <div>
-      <div class="section-title block-title"><h2>طرابلس القديمة… قلب التجربة السياحية</h2><p>تأخذ المدينة القديمة زائرها في رحلة بين الماضي والحاضر؛ أزقة ضيقة، أسواق حية، حمامات تاريخية، قنصليات قديمة، مساجد عثمانية، وواجهات تحكي تاريخ المدينة.</p></div>
-      <div class="badge-list"><span class="badge">باب البحر</span><span class="badge">قوس ماركوس</span><span class="badge">جامع قرجي</span><span class="badge">جامع الباشا</span><span class="badge">حمام درغوث</span><span class="badge">سوق الصاغة</span><span class="badge">سوق القزدارة</span><span class="badge">ميدان الشهداء</span></div>
-    </div>
-    <div class="photo-grid"><img src="assets/tripoli_old_city.jpeg" alt="طرابلس القديمة"><img src="assets/old_city_alley.jpeg" alt="أزقة المدينة القديمة"><img src="assets/red_castle_1.jpg" alt="السرايا الحمراء"></div>
-  </div>
-</section>
-
-<section id="history" class="section">
-  <div class="wrap">
-    <div class="section-title"><h2>الشواهد التاريخية للمدينة</h2><p>كل شاهد تاريخي في طرابلس يتحول داخل المنصة إلى قصة قصيرة، بطاقة تعريف، موقع على الخريطة، وصورة حقيقية تساعد الزائر على الفهم والاكتشاف.</p></div>
-    <div class="grid cols-4">
-      <div class="card"><div class="icon">🏰</div><h3>السرايا الحمراء</h3><p>قلعة المدينة ومشهدها الأبرز قرب ميدان الشهداء، وبوابة لقراءة طبقات التاريخ الليبي.</p></div>
-      <div class="card"><div class="icon">🏛️</div><h3>قوس ماركوس أوريليوس</h3><p>أحد أقدم شواهد المدينة في محلة باب البحر، ويمثل حضور المرحلة الرومانية في ذاكرة طرابلس.</p></div>
-      <div class="card"><div class="icon">🕌</div><h3>الجوامع والزوايا</h3><p>جامع قرجي، جامع الباشا، جامع الناقة وغيرها من الشواهد التي تعكس جمال العمارة الإسلامية.</p></div>
-      <div class="card"><div class="icon">🚪</div><h3>الأبواب والأسواق</h3><p>الأبواب والأسوار والأسواق التاريخية تصنع نسيج المدينة وتربط الزيارة بالحركة اليومية.</p></div>
-    </div>
-  </div>
-</section>
-
-<section id="crafts" class="section feature">
-  <div class="wrap">
-    <div class="section-title"><h2>الصناعات التقليدية… ذاكرة تُصنع باليد</h2><p>تقدم المنصة الصناعات التقليدية كجزء من التجربة السياحية: مشاهدة الحرفة، التعرف على الحرفي، شراء تذكار أصيل، وفهم العلاقة بين الإنسان والبيئة.</p></div>
-    <div class="craft-strip">
-      <div class="craft-item"><b>النحاسيات</b><span>أطباق زينة، أباريق شاي، مباخر، وقدور بطابع زخرفي.</span></div>
-      <div class="craft-item"><b>الفضيات والذهب</b><span>حلي نسائية وتحف وصناديق وقوارير عطور مرتبطة باللباس التقليدي.</span></div>
-      <div class="craft-item"><b>الفخار والخشب</b><span>أوانٍ، مباخر، جرار، أدوات طعام، وصناديق خشبية.</span></div>
-      <div class="craft-item"><b>الصوف والجلود</b><span>جرود، برانيس، كليم، أحذية تقليدية، حقائب، وسروج.</span></div>
-      <div class="craft-item"><b>السعف والحرير</b><span>سلال، حصير، مراوح، أردية، وفرامل وأحذية مزخرفة.</span></div>
-    </div>
-    <div class="gallery feature-gallery top-gap"><img src="assets/crafts_1.jpg" alt="حرف تقليدية"><img src="assets/crafts_2.jpeg" alt="صناعات تقليدية"><img src="assets/crafts_8.jpeg" alt="موروث حرفي"><img src="assets/religious_practices.jpeg" alt="ممارسات اجتماعية"></div>
-  </div>
-</section>
-
-<section id="food" class="section food-section">
-  <div class="wrap">
-    <div class="section-title"><h2>مذاقات من روح المكان</h2><p>المطبخ الليبي جزء أساسي من الترويج السياحي؛ يجمع بين أطباق البحر المتوسط، الطعام الصحراوي، البهارات، الحبوب، اللحوم، الأسماك، والحلويات التقليدية.</p></div>
-    <div class="grid cols-4">
-      <div class="card taste"><h3>البازين</h3><p>عجين دقيق الشعير يُشكّل على هيئة مقببة ويقدم مع مرق اللحم أو السمك أو البيض والبطاطا.</p></div>
-      <div class="card taste"><h3>الكسكسي</h3><p>حبوب السميد تطبخ على البخار وتقدم مع مرق اللحم أو السمك والخضار أو البصل.</p></div>
-      <div class="card taste"><h3>الرشتة</h3><p>رقائق عجين تقطع مثل المكرونة وتقدم مع مرق البصل والحمص واللحم.</p></div>
-      <div class="card taste"><h3>الحرايمي</h3><p>طبق سمك في مرق غني بالتوابل الفواحة، مناسب للتعريف بالمذاق البحري المحلي.</p></div>
-      <div class="card taste"><h3>الشربة الليبية</h3><p>مرق خفيف يضاف له الحمص والنعناع واللحم أو السمك، ويكثر تناوله في فصل الشتاء.</p></div>
-      <div class="card taste"><h3>المبطن والبوريك</h3><p>أطباق شعبية مناسبة للتذوق السريع، تجمع بين البطاطا أو رقائق العجين والحشوات المتبلة.</p></div>
-      <div class="card taste"><h3>الحلويات</h3><p>المقروض، الغريبة، كعك البلاد، البقلاوة، الدبلة، الحجيبات، والروزاطة.</p></div>
-      <div class="card taste"><h3>المقاهي المعاصرة</h3><p>تجارب محلية وعالمية تشمل الشطائر، القلاية، المفروم، التونة، والمطابخ التركية والشامية والإيطالية.</p></div>
-    </div>
-  </div>
-</section>
-
-<section id="routes" class="section program">
-  <div class="wrap">
-    <div class="section-title"><h2>طرابلس مدينة الألف جولة</h2><p>مسارات مختصرة قابلة للاستخدام في المنصة، كروت سياحية، تطبيق مرشد، أو برنامج زيارة يومية.</p></div>
-    <div class="program-list routes-list">
-      <div class="program-item"><time>جولة 1</time><div><strong>جولة المدينة القديمة</strong><br><span>قوس ماركوس، الأسواق، الجوامع، الحمامات، الأزقة، والبيوت التقليدية.</span></div><span>2–3 ساعات</span></div>
-      <div class="program-item"><time>جولة 2</time><div><strong>جولة الشواهد والمتاحف</strong><br><span>السرايا الحمراء، المتحف الوطني، الساحات التاريخية، ومحيط ميدان الشهداء.</span></div><span>نصف يوم</span></div>
-      <div class="program-item"><time>جولة 3</time><div><strong>جولة الحرف والأسواق</strong><br><span>سوق الصاغة، القزدارة، النحاسيات، الفضة، الهدايا، ولقاء الحرفيين.</span></div><span>ساعتان</span></div>
-      <div class="program-item"><time>جولة 4</time><div><strong>جولة المذاق والحياة اليومية</strong><br><span>المقاهي، الأكلات المحلية، كورنيش ميناء طرابلس، وحركة الشارع مساءً.</span></div><span>مسائية</span></div>
-    </div>
-  </div>
-</section>
-
-<section id="services" class="section">
-  <div class="wrap">
-    <div class="section-title"><h2>الخدمات السياحية ومعلومات الزائر</h2><p>تجعل المنصة زيارة طرابلس أسهل من خلال عرض خدمات الإيواء، الطعام، النقل، الإرشاد، التسوق، ومعلومات العملة والمصارف.</p></div>
-    <div class="grid cols-3">
-      <div class="card"><div class="icon">🏨</div><h3>الإيواء والفنادق</h3><p>خيارات إقامة من الفنادق العالمية إلى الفنادق التقليدية القريبة من المدينة القديمة والواجهة البحرية.</p></div>
-      <div class="card"><div class="icon">🍽️</div><h3>المطاعم والمقاهي</h3><p>تعريف بالمأكولات الطرابلسية والليبية، والمقاهي الشعبية والمعاصرة، وتجارب الطعام المحلية.</p></div>
-      <div class="card"><div class="icon">🚕</div><h3>النقل والوصول</h3><p>إرشاد الزائر إلى نقاط الانطلاق، مواقف السيارات، الواجهة البحرية، ومناطق الحركة السياحية.</p></div>
-      <div class="card"><div class="icon">🧭</div><h3>الإرشاد السياحي</h3><p>مسارات قصيرة، بطاقات تعريف للمعالم، واقتراحات للمرشدين والزيارات الجماعية.</p></div>
-      <div class="card"><div class="icon">💳</div><h3>العملة والمصارف</h3><p>الدينار الليبي هو العملة الوطنية، مع معلومات مبسطة حول الصرف، المصارف، وحمل النقد أثناء الرحلة.</p></div>
-      <div class="card"><div class="icon">📸</div><h3>نقاط التصوير</h3><p>مقترحات تصوير في المدينة القديمة، السرايا، الأسواق، الحرف، الكورنيش، ومشاهد الحياة اليومية.</p></div>
-    </div>
-  </div>
-</section>
-
-<section id="daily" class="section daily-section">
-  <div class="wrap split">
-    <div>
-      <div class="section-title block-title"><h2>الحياة اليومية في طرابلس</h2><p>قوة طرابلس ليست في آثارها فقط، بل في حركة الناس، المقاهي، رائحة الخبز، الحرفيين، الأسواق، الكورنيش، والضيافة اليومية.</p></div>
-      <ul class="life-list">
-        <li>صباح المدينة القديمة: أبواب المحلات، الحرفيون، وروائح القهوة والخبز.</li>
-        <li>منتصف اليوم: أسواق شعبية، مطاعم، حركة تجارية، وزيارات قصيرة للمعالم.</li>
-        <li>المساء: الكورنيش، المقاهي، جلسات العائلات، ونقاط التصوير.</li>
-        <li>تجربة الزائر: شراء تذكار، تذوق طبق محلي، التقاط صورة، وسماع حكاية من أهل المكان.</li>
+  <header class="site-header" id="top">
+    <nav class="navbar container">
+      <a class="brand" href="#top" aria-label="طرابلس السياحية">
+        <span class="brand-mark">ط</span>
+        <span><strong>طرابلس السياحية</strong><small>Tripoli Tourism</small></span>
+      </a>
+      <button class="menu-toggle" id="menuToggle" aria-label="فتح القائمة">☰</button>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#attractions">المعالم</a></li>
+        <li><a href="#routes">المسارات</a></li>
+        <li><a href="#services">الخدمات</a></li>
+        <li><a href="#crafts">الحرف</a></li>
+        <li><a href="#map">الخريطة</a></li>
       </ul>
-    </div>
-    <div class="daily-card"><b>الفكرة الترويجية</b><span>لا نبيع للزائر معلماً فقط؛ نمنحه يومًا كاملًا في طرابلس.</span></div>
-  </div>
-</section>
+      <a class="nav-cta" href="#explore">ابدأ الاستكشاف</a>
+    </nav>
+  </header>
 
-<section id="mapbox" class="map-section">
-  <div class="wrap">
-    <div class="map-card"><div class="map-head"><h2>خريطة اكتشاف طرابلس</h2><p>نقاط ومعالم من ملف KML للمدينة القديمة، قابلة للتصنيف لاحقًا إلى: تاريخي، حرفي، طعام، خدمات، وحياة يومية.</p></div><div id="map"></div></div>
-  </div>
-</section>
+  <main>
+    <section class="hero section" id="explore">
+      <div class="container hero-grid">
+        <div class="hero-content">
+          <span class="eyebrow">Visit Tripoli, Libya</span>
+          <h1>طرابلس… مدينة التاريخ والبحر والحياة</h1>
+          <p>منصة رقمية ترويجية تجمع أجمل معالم طرابلس، مسارات الزيارة، مواقع الإيواء، المطاعم، المقاهي، الصناعات التقليدية، والخريطة التفاعلية في تجربة واحدة حديثة.</p>
+          <div class="hero-actions"><a class="btn btn-primary" href="#attractions">استكشف المعالم</a><a class="btn btn-secondary" href="#routes">شاهد المسارات</a></div>
+          <div class="hero-metrics"><div><strong>50+</strong><span>نقطة جذب وخدمة</span></div><div><strong>12+</strong><span>مسار وتجربة</span></div><div><strong>24/7</strong><span>دليل رقمي</span></div></div>
+        </div>
+        <div class="hero-card">
+          <img src="https://raw.githubusercontent.com/tidclibya2026/tripoli/main/red_castle_1.jpg" alt="السرايا الحمراء في طرابلس" />
+          <div class="hero-card-caption"><span>وجهة مميزة</span><h2>السرايا الحمراء والمدينة القديمة</h2><p>ذاكرة طرابلس التاريخية وقلبها السياحي والثقافي.</p></div>
+        </div>
+      </div>
+    </section>
 
-<section class="section media">
-  <div class="wrap split closing-split">
-    <div><h2>طرابلس… ليست زيارة واحدة</h2><p>كل زاوية تصلح لجولة، وكل سوق يحمل حكاية، وكل طبق يفتح بابًا لفهم روح المدينة. هذه المنصة تجعل طرابلس قابلة للاكتشاف، الترويج، والتوثيق.</p></div>
-    <div class="closing-card"><b>الرسالة النهائية</b><span>مدينة تاريخية، موروث حي، خدمات واضحة، وحياة يومية أصيلة.</span></div>
-  </div>
-</section>
-</main>
-<footer class="footer"><div class="wrap"><div><b>اكتشف طرابلس</b><br>منصة الترويج السياحي والموروث الثقافي — مركز المعلومات والتوثيق السياحي</div><div>© 2026 | Discover Tripoli Tourism Platform</div></div></footer>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><script src="app.js"></script>
-</body></html>
+    <section class="section intro"><div class="container intro-grid"><div class="section-heading"><span class="eyebrow">Why Tripoli?</span><h2>بوابة المتوسط وذاكرة المدينة الليبية</h2></div><p>تمتلك طرابلس مقومات ترويجية قوية تجمع بين التاريخ، العمارة، البحر، الأسواق القديمة، الحرف التقليدية، والمقاهي والمطاعم، مما يجعلها نقطة انطلاق مثالية لبناء منصة سياحية رقمية حديثة تخدم الزائر وصانع القرار والقطاع الخاص.</p></div></section>
+
+    <section class="section" id="attractions"><div class="container"><div class="section-heading center"><span class="eyebrow">Attractions</span><h2>معالم وتجارب مختارة</h2><p>بطاقات قابلة للتحديث من ملف البيانات في JavaScript أو من JSON لاحقًا.</p></div><div class="cards-grid" id="attractionsGrid"></div></div></section>
+
+    <section class="section highlight"><div class="container highlight-grid"><div class="highlight-image"><img src="https://raw.githubusercontent.com/tidclibya2026/tripoli/main/Marcus%20Arch.JPG" alt="قوس ماركوس أوريليوس في طرابلس" /></div><div class="highlight-content"><span class="eyebrow">Featured Site</span><h2>قوس ماركوس أوريليوس</h2><p>أحد أبرز الشواهد الأثرية في قلب المدينة القديمة، ويمكن تقديمه داخل المنصة بصفحة تعريفية تشمل القصة التاريخية، الصور، الموقع، المسارات القريبة، وتجربة الزيارة المقترحة.</p><div class="feature-list"><span>موقع أثري</span><span>مسار المدينة القديمة</span><span>تصوير وتوثيق</span><span>نقطة جذب عالية</span></div><a class="btn btn-primary" href="#map">عرض على الخريطة</a></div></div></section>
+
+    <section class="section routes" id="routes"><div class="container"><div class="section-heading center"><span class="eyebrow">Curated Routes</span><h2>مسارات سياحية مقترحة</h2><p>تصميم المسارات يساعد الزائر على فهم المدينة بسرعة ويحوّل الزيارة إلى تجربة منظمة.</p></div><div class="routes-grid" id="routesGrid"></div></div></section>
+
+    <section class="section services" id="services"><div class="container"><div class="section-heading center"><span class="eyebrow">Tourism Services</span><h2>خدمات مساندة للزائر</h2></div><div class="service-layout"><article class="service-panel"><img src="https://raw.githubusercontent.com/tidclibya2026/tripoli/main/hotel_4.jpeg" alt="الإيواء السياحي في طرابلس" /><div><h3>الإيواء السياحي</h3><p>عرض الفنادق ومرافق الإقامة مع الموقع، الخدمات، صور حقيقية، وتصنيف واضح.</p></div></article><article class="service-panel"><img src="https://raw.githubusercontent.com/tidclibya2026/tripoli/main/Tribulus%20Restaurant.jpeg" alt="مطاعم طرابلس" /><div><h3>المطاعم والمقاهي</h3><p>إبراز التجربة المحلية، المطبخ الليبي، المقاهي، والأسواق القريبة من مسارات الزيارة.</p></div></article></div></div></section>
+
+    <section class="section crafts" id="crafts"><div class="container crafts-grid"><div class="crafts-content"><span class="eyebrow">Local Crafts</span><h2>الصناعات التقليدية… ذاكرة قابلة للتسويق</h2><p>يمكن للمنصة أن تعرض الحرفيين والمنتجات والأسواق الحية، بما يربط الترويج السياحي بدعم الاقتصاد المحلي وإبراز الهوية الثقافية لمدينة طرابلس.</p><a class="btn btn-secondary" href="#contact">إضافة حرفي أو منتج</a></div><div class="crafts-image"><img src="https://raw.githubusercontent.com/tidclibya2026/tripoli/main/crafts_1.jpg" alt="الصناعات التقليدية في طرابلس" /></div></div></section>
+
+    <section class="section map-section" id="map"><div class="container"><div class="section-heading center"><span class="eyebrow">Interactive Map</span><h2>خريطة طرابلس السياحية</h2><p>يمكن ربط هذا القسم لاحقًا مع Leaflet وملف JSON للنقاط السياحية.</p></div><div class="map-card"><div class="map-placeholder"><span class="map-pin">⌖</span><h3>Tripoli Smart Tourism Map</h3><p>المعالم، الإيواء، المطاعم، المقاهي، الحرف، المسارات، والخدمات.</p></div><div class="map-info"><h3>تصنيفات الخريطة</h3><ul><li><span></span> معالم تاريخية وأثرية</li><li><span></span> مواقع ثقافية وتراثية</li><li><span></span> مطاعم ومقاهي</li><li><span></span> فنادق وخدمات سياحية</li></ul></div></div></div></section>
+
+    <section class="section final-cta" id="contact"><div class="container final-cta-box"><span class="eyebrow">Ready for GitHub Pages</span><h2>منصة ترويجية قابلة للتطوير</h2><p>هذا القالب يصلح كواجهة أولى احترافية، ويمكن بعد ذلك إضافة صفحات تفصيلية، لوحة تحكم، قاعدة بيانات JSON، وخريطة Leaflet تفاعلية.</p><a class="btn btn-primary" href="#top">العودة للأعلى</a></div></section>
+  </main>
+
+  <footer class="footer"><div class="container footer-grid"><div><strong>طرابلس السياحية</strong><p>منصة ترويجية رقمية لمدينة طرابلس.</p></div><div><p>تصميم وتطوير: مركز المعلومات والتوثيق السياحي</p><p>© 2026</p></div></div></footer>
+  <script src="app.js"></script>
+</body>
+</html>
